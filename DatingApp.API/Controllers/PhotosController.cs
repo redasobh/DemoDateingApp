@@ -14,7 +14,7 @@ using Microsoft.Extensions.Options;
 
 namespace DatingApp.API.Controllers
 {
-    [Authorize]
+   // [Authorize]
     [Route("api/users/{userId}/photos")]
     [ApiController]
     public class PhotosController : ControllerBase
@@ -47,7 +47,7 @@ namespace DatingApp.API.Controllers
         {
             if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
             return Unauthorized();
-                var userFromRepo = await _repo.GetUser(userId);
+                var userFromRepo = await _repo.GetUser(userId,true);
                 var file = photoForCreateDto.File;
                 var uploadResult = new ImageUploadResult();
                 if (file!=null && file.Length > 0)
@@ -80,7 +80,7 @@ namespace DatingApp.API.Controllers
         public async Task<IActionResult> SetMainPhoto(int userId, int id){
             if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
             return Unauthorized();
-            var user = await _repo.GetUser(userId);
+            var user = await _repo.GetUser(userId,true);
             if(!user.Photos.Any(p=>p.Id==id)) return Unauthorized();
             var photoFromRepo = await _repo.GetPhoto(id);
             if(photoFromRepo.IsMain) return BadRequest("this is Already the main Photo");
@@ -95,7 +95,7 @@ namespace DatingApp.API.Controllers
         {
             if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
             return Unauthorized();
-            var user = await _repo.GetUser(userId);
+            var user = await _repo.GetUser(userId,true);
             if(!user.Photos.Any(p=>p.Id==id)) return Unauthorized();
             var photoFromRepo = await _repo.GetPhoto(id);
             if(photoFromRepo.IsMain) return BadRequest("You Cannot delete your main Photo");
