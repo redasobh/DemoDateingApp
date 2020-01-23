@@ -1,5 +1,5 @@
 import { MemberEditComponent } from './members/member-edit/member-edit.component';
-import { BrowserModule } from '@angular/platform-browser';
+import { BrowserModule, HammerGestureConfig, HAMMER_GESTURE_CONFIG } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { appRoutes } from './app-routing.module';
@@ -44,6 +44,12 @@ import { RolesModalComponent } from './admin/roles-modal/roles-modal.component';
 
 export function tokenGetter() {
    return localStorage.getItem('token');
+}
+export class CustomeHammerConfig extends HammerGestureConfig {
+   overrides = {
+      pinch: {enable: false},
+      rotate: { enable: false}
+   };
 }
 
 @NgModule({
@@ -101,7 +107,8 @@ export function tokenGetter() {
       PreventUnsavedChanges,
       ListsResolver,
       MessagesResolver,
-      AdminService
+      AdminService,
+      {provide: HAMMER_GESTURE_CONFIG, useClass: CustomeHammerConfig}
    ],
    entryComponents: [
       RolesModalComponent
